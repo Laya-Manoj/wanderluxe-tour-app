@@ -1,47 +1,25 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Clock, Users, Star, ChevronRight, MapPin } from 'lucide-react';
-
-const tours = [
-  {
-    id: 1,
-    title: 'Greek Islands Luxury Cruise',
-    description: 'Experience the breathtaking beauty of the Greek Islands on our luxury cruise.',
-    price: 2499,
-    duration: 10,
-    rating: 4.9,
-    groupSize: '12 max',
-    image: 'https://images.pexels.com/photos/1268855/pexels-photo-1268855.jpeg',
-    location: 'Greek Islands'
-  },
-  {
-    id: 2,
-    title: 'Japanese Cherry Blossom Tour',
-    description: 'Immerse yourself in the magic of Japan during cherry blossom season.',
-    price: 3299,
-    duration: 12,
-    rating: 4.8,
-    groupSize: '10 max',
-    image: 'https://images.pexels.com/photos/1440476/pexels-photo-1440476.jpeg',
-    location: 'Japan'
-  },
-  {
-    id: 3,
-    title: 'Peruvian Highlands Expedition',
-    description: 'Discover ancient Incan ruins and breathtaking mountain vistas in Peru.',
-    price: 2899,
-    duration: 14,
-    rating: 4.7,
-    groupSize: '8 max',
-    image: 'https://images.pexels.com/photos/2356045/pexels-photo-2356045.jpeg',
-    location: 'Peru'
-  }
-];
+import { toursData, AdminTour } from '../../data/toursData';
 
 const FeaturedTours = () => {
   const sectionRef = useRef(null);
   const isInView = useInView(sectionRef, { once: true, amount: 0.2 });
+
+  const [publishedTours, setPublishedTours] = useState<AdminTour[]>(
+    toursData.filter(tour => tour.status === 'published')
+  );
+
+  // Watch for changes in the data version to re-render
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setPublishedTours(toursData.filter(tour => tour.status === 'published'));
+    }, 1000); // Check every second for updates
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
   return (
     <section 
@@ -75,7 +53,7 @@ const FeaturedTours = () => {
         </motion.div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {tours.map((tour, index) => (
+          {publishedTours.slice(0, 3).map((tour, index) => (
             <motion.div
               key={tour.id}
               initial={{ opacity: 0, y: 30 }}

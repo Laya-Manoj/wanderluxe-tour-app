@@ -7,7 +7,7 @@ export interface Tour {
   title: string;
   description: string;
   price: number;
-  duration: string; // Already updated to string
+  duration: string;
   place: string;
   maxPeople: number;
   image: string;
@@ -65,7 +65,7 @@ const TourCard = ({ tour, index }: TourCardProps) => {
         </div>
         
         <Link
-          to={`/tours/${tour.id}`} // Fixed template literal syntax
+          to={`/tours/${tour.id}`}
           className="block w-full py-3 text-center rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-colors"
         >
           View Details

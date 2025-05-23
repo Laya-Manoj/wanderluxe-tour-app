@@ -18,7 +18,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   onSave: (tour: Tour) => void;
-  editData?: Tour | null;
+  editData: Tour | null;
 }
 
 const TourFormModal: React.FC<Props> = ({ open, onClose, onSave, editData }) => {

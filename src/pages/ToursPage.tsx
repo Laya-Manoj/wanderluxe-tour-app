@@ -1,47 +1,34 @@
-import { useEffect, useState } from "react";
-import Navbar from "../components/common/Navbar";
-import Footer from "../components/common/Footer";
+import { motion } from 'framer-motion';
+import TourCard from '../components/tours/TourCard';
+import { toursData, AdminTour } from '../data/toursData';
 
 const ToursPage = () => {
-  const [tours, setTours] = useState<{ video: string; description: string }[]>([]);
-
-  useEffect(() => {
-    const stored = localStorage.getItem("tours");
-    if (stored) {
-      setTours(JSON.parse(stored));
-    }
-  }, []);
+  // Filter only published tours for users
+  const publishedTours = toursData.filter(tour => tour.status === 'published');
 
   return (
-    <div className="bg-white min-h-screen">
-      <Navbar />
-      <div className="max-w-5xl mx-auto px-6 py-16">
-        <h1 className="text-3xl font-bold mb-8 text-center">Tour Packages</h1>
+    <div className="container mx-auto py-12 px-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h1 className="text-3xl font-serif font-bold text-center mb-8">Explore Our Tours</h1>
+        <p className="text-gray-600 text-center mb-12">Discover amazing adventures around the world</p>
 
-        {tours.length === 0 ? (
-          <p className="text-center text-gray-500">No tours added yet.</p>
+        {publishedTours.length === 0 ? (
+          <div className="text-center">
+            <h3 className="text-lg font-medium mb-2">No tours available</h3>
+            <p className="text-gray-500">Check back later for exciting new tours!</p>
+          </div>
         ) : (
-          <div className="grid md:grid-cols-2 gap-8">
-            {tours.map((tour, idx) => (
-              <div
-                key={idx}
-                className="border rounded-lg shadow-md overflow-hidden"
-              >
-                <iframe
-                  src={tour.video}
-                  className="w-full h-64"
-                  title={`tour-video-${idx}`}
-                  allowFullScreen
-                />
-                <div className="p-4">
-                  <p className="text-gray-700">{tour.description}</p>
-                </div>
-              </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {publishedTours.map((tour: AdminTour, index: number) => (
+              <TourCard key={tour.id} tour={tour} index={index} />
             ))}
           </div>
         )}
-      </div>
-      <Footer />
+      </motion.div>
     </div>
   );
 };

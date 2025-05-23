@@ -8,6 +8,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 
 // Pages
 import HomePage from './pages/HomePage';
+import ToursPage from './pages/ToursPage';
 import TourDetailPage from './pages/TourDetailPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -22,7 +23,6 @@ import AdminBookingsPage from './pages/admin/AdminBookingsPage';
 import AdminCustomersPage from './pages/admin/AdminCustomersPage';
 import AdminMessagesPage from './pages/admin/AdminMessagesPage';
 import AdminSettingsPage from './pages/admin/AdminSettingsPage';
-
 
 function App() {
   const location = useLocation();
@@ -62,14 +62,13 @@ function App() {
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
           <Route path="/" element={<HomePage />} />
-          
+          <Route path="/tours" element={<ToursPage />} />
           <Route path="/tours/:id" element={<TourDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/about" element={<AboutPage />} />
-<Route path="/contact" element={<ContactPage />} />
-
-<Route path="/admin/add-tour" element={<AddTourPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="/admin/add-tour" element={<AddTourPage />} />
           
           {/* Admin Routes */}
           <Route 
@@ -96,7 +95,7 @@ function App() {
               </ProtectedRoute>
             } 
           />
-           <Route 
+          <Route 
             path="/admin/bookings" 
             element={
               <ProtectedRoute role="admin">
