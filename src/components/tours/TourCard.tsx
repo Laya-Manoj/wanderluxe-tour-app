@@ -7,10 +7,12 @@ export interface Tour {
   title: string;
   description: string;
   price: number;
-  duration: number;
-  rating: number;
-  groupSize: string;
+  duration: string; // updated from number to string
+  place: string;
+  maxPeople: number;
   image: string;
+  rating: number;
+  groupSize: number;
   location: string;
 }
 
