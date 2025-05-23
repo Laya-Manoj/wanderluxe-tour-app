@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import { Tour } from '../../components/tours/TourCard';
+import TourFormModal from './TourFormModal';
 
 // Extended tour data with additional admin properties
 interface AdminTour extends Tour {
@@ -137,7 +138,8 @@ const AdminToursPage = () => {
   const [filter, setFilter] = useState('all');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+
   const filteredTours = tours.filter(tour => {
     const matchesSearch = tour.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           tour.location.toLowerCase().includes(searchTerm.toLowerCase());
@@ -164,6 +166,21 @@ const AdminToursPage = () => {
     }
   };
 
+  const handleAddTour = (newTour: Omit<AdminTour, 'id' | 'status' | 'availability' | 'lastUpdated' | 'totalBookings'>) => {
+    const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+    const addedTour: AdminTour = {
+      ...newTour,
+      id: tours.length + 1, // Simple ID generation (in a real app, use a better method like UUID)
+      status: 'draft', // Default status for new tours
+      availability: 'available', // Default availability
+      lastUpdated: today,
+      totalBookings: 0,
+      place: newTour.location, // Since place and location seem to be the same in your context
+      maxPeople: newTour.groupSize, // Map maxPeople to groupSize
+    };
+    setTours([...tours, addedTour]);
+  };
+
   return (
     <AdminLayout>
       <motion.div
@@ -177,6 +194,7 @@ const AdminToursPage = () => {
             <p className="text-gray-600">Manage your tour packages and availability</p>
           </div>
           <button
+            onClick={() => setIsModalOpen(true)} // Open modal on click
             className="flex items-center px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition"
           >
             <Plus className="h-5 w-5 mr-2" />
@@ -527,6 +545,7 @@ const AdminToursPage = () => {
               You haven't created any tours yet
             </p>
             <button
+              onClick={() => setIsModalOpen(true)} // Open modal on click
               className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition"
             >
               Create Your First Tour
@@ -534,6 +553,14 @@ const AdminToursPage = () => {
           </div>
         )}
       </motion.div>
+
+      {/* Tour Form Modal */}
+      <TourFormModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSave={handleAddTour}
+        editData={null} // For adding new tours, editData is null
+      />
     </AdminLayout>
   );
 };
